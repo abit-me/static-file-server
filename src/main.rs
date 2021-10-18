@@ -1,4 +1,10 @@
 mod upload;
+mod path;
+mod show;
+mod icon;
+mod download;
+
+
 use tokio;
 use axum::{
     handler::{get},
@@ -6,11 +12,6 @@ use axum::{
 };
 
 use std::{net::SocketAddr};
-mod path;
-mod show;
-mod icon;
-mod download;
-
 
 #[tokio::main]
 async fn main() {
@@ -26,7 +27,6 @@ async fn main() {
     let app = Router::new()
         .route("/", get(show::show_files))
         .route("/favicon.ico", get(icon::favicon))
-        //.route("/download/:filename", get(download::down))
         .route("/:filename", get(download::down))
         .route("/./:filename", get(download::down2)) // http://10.10.10.191:1234/./Packages
         .route("/upload", get(upload::show_form).post(upload::accept_form))

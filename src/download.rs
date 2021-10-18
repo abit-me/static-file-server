@@ -3,6 +3,7 @@ use std::io::Read;
 use axum::{
     extract::{Path},
     response::{IntoResponse},
+    http::{header::{HeaderMap, HeaderValue, CONTENT_TYPE}},
     http::Response,
     http::StatusCode,
 };
@@ -21,9 +22,14 @@ pub async fn down(Path(file_name): Path<String>) -> impl IntoResponse {
             return (StatusCode::NOT_FOUND, "file not exists").into_response()
         }
         if let Ok(buff) = read_a_file(&path) {
-            let res = Response::new(Full::from(buff));
-            // let res = Response::builder().header("Content-Type", "application/octet-stream").body(Full::from(buff)).unwrap();
-            return res;
+            let mut headers = HeaderMap::new();
+            headers.insert(CONTENT_TYPE, "application/octet-stream".parse().unwrap());
+            let response = Response::new(Full::from(buff));
+            let (mut parts, body) = response.into_parts();
+            parts.status = StatusCode::OK;
+            parts.headers = headers;
+            let response = Response::from_parts(parts, body);
+            return response;
         }
     }
     return (StatusCode::NOT_FOUND, "inner error").into_response()

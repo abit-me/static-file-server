@@ -10,7 +10,6 @@ mod path;
 mod show;
 mod icon;
 mod download;
-mod bad;
 
 
 #[tokio::main]
@@ -29,6 +28,7 @@ async fn main() {
         .route("/favicon.ico", get(icon::favicon))
         //.route("/download/:filename", get(download::down))
         .route("/:filename", get(download::down))
+        .route("/./:filename", get(download::down2)) // http://10.10.10.191:1234/./Packages
         .route("/upload", get(upload::show_form).post(upload::accept_form))
         .layer(tower_http::trace::TraceLayer::new_for_http());
 

@@ -17,7 +17,7 @@ fn string_to_static_str(s: String) -> &'static str {
 
 pub async fn show_files() -> Html<&'static str> {
 
-    let htlm_header = "<html><head><title>Cydia</title></head>";
+    let htlm_header = "<html><head><title>Static Server</title></head>";
     let html_tail = "</html>";
     let mut html_str = htlm_header.to_string();
 
